@@ -7,7 +7,7 @@ The suggested solution will generate 18 random rows in order to create 6 tickets
 The entities have been modeled to be created by a builder that validates if the date is consistent.
 The application is built using spring command line runner.
 
-## Solution Salkthrough
+## Solution Walkthrough
 1. The generator class contains an array with all the numbers in a ticket strip.
 2. Each time we generate a new strip first we copy those numbers and shuffle them in a random order.
 3. Now we iterate over the numbers and assign them into a random row
