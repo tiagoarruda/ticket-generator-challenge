@@ -1,6 +1,7 @@
 package lindar.media.ticketgeneratorchallenge.ticket;
 
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,13 +19,15 @@ import static lindar.media.ticketgeneratorchallenge.ticket.TicketStrip.STRIP_SIZ
 
 public class TicketStripGeneratorImpl implements TicketStripGenerator {
     private final List<Integer> numbers = IntStream.range(1, 91).boxed().collect(Collectors.toList());
+    @Value("${no-validation:#{false}}")
+    private boolean noValidation;
 
     @Override
     public TicketStrip generate() {
         List<Integer> shuffled = new ArrayList<>(numbers);
         Collections.shuffle(shuffled);
 
-        return new TicketStrip.TicketStripBuilder()
+        return new TicketStrip.TicketStripBuilder(noValidation)
                 .tickets(createStrip(shuffled))
                 .build();
     }
@@ -53,7 +56,7 @@ public class TicketStripGeneratorImpl implements TicketStripGenerator {
             int[] row2 = rows.remove(0).values().stream().mapToInt(i -> i).toArray();
             int[] row3 = rows.remove(0).values().stream().mapToInt(i -> i).toArray();
 
-            tickets[t] = new Ticket.TicketBuilder()
+            tickets[t] = new Ticket.TicketBuilder(noValidation)
                     .rows(new int[][]{row1, row2, row3})
                     .build();
         }

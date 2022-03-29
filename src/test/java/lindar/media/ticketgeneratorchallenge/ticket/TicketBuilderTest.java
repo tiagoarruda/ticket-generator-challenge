@@ -94,4 +94,14 @@ class TicketBuilderTest {
                 .build();
         assertEquals(rows, ticket.getRows());
     }
+
+    @Test
+    void build_noValidationTrue_allowAnything() {
+        int[][] rows = new int[][]{};
+
+        Ticket ticket = new Ticket.TicketBuilder(true)
+                .rows(rows)
+                .build();
+        assertEquals(rows, ticket.getRows());
+    }
 }

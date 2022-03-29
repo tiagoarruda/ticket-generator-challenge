@@ -28,6 +28,13 @@ public class Ticket {
 
     public static class TicketBuilder {
         private int[][] rows;
+        private boolean noValidation = false;
+
+        public TicketBuilder() {}
+
+        public TicketBuilder(boolean noValidation) {
+            this.noValidation = noValidation;
+        }
 
         public TicketBuilder rows(int[][] rows) {
             this.rows = rows;
@@ -40,9 +47,11 @@ public class Ticket {
         }
 
         private void validate() {
-            Assert.notNull(this.rows, "Can't create a ticket without numbers.");
-            validateRows();
-            validateNumbers();
+            if (!noValidation) {
+                Assert.notNull(this.rows, "Can't create a ticket without numbers.");
+                validateRows();
+                validateNumbers();
+            }
         }
 
         private void validateNumbers() {

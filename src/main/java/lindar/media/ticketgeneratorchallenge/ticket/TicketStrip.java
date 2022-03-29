@@ -23,11 +23,24 @@ public class TicketStrip {
 
     public static class TicketStripBuilder {
         private Ticket[] tickets;
+        private boolean noValidation = false;
+
+        public TicketStripBuilder() {}
+
+        public TicketStripBuilder(boolean noValidation) {
+            this.noValidation = noValidation;
+        }
 
         public TicketStrip build() {
-            validateStripSize();
-            validateRepeatedNumbers();
+            validate();
             return new TicketStrip(tickets);
+        }
+
+        private void validate() {
+            if(!noValidation) {
+                validateStripSize();
+                validateRepeatedNumbers();
+            }
         }
 
         public TicketStripBuilder tickets(Ticket[] tickets) {

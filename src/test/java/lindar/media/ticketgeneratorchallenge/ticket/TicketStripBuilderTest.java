@@ -37,6 +37,13 @@ class TicketStripBuilderTest {
         });
     }
 
+    @Test
+    void build_noValidationTrue_allowsAnything() {
+        new TicketStrip.TicketStripBuilder(true)
+                .tickets(null)
+                .build();
+    }
+
     private Ticket createTicket() {
         int[][] rows = new int[3][5];
         IntStream.range(1, 6).forEach(pos -> {

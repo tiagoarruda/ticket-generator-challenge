@@ -28,11 +28,19 @@ If you pass the argument batch-size the application will create the specified nu
 ```shell
  mvn spring-boot:run -Dspring-boot.run.arguments=--batch-size=10000
 ```
+- `Generate a batch of ticket strips with validation set off:`<br />
+  If you pass the argument no-validation the application entities will not do any data validation.
+```shell
+mvn spring-boot:run -Dspring-boot.run.arguments="--batch-size=10000 --no-validation=true"
+```
 ### Arguments
 - `batch-size`<br />
 Integer that specifies how many ticket strips should be created.<br />
   Passing a string will throw and exception and end execution.
   Negative values will be ignored and one strip will be generated.
+
+- `no-validation`<br />
+Boolean that disables entity data validation improving performance considerably.
   
 ## Performance
 The Object Oriented model suggested in this solution validates the contents of all the strips, those operations take time but guarantee that the object is consistent with it's model.
