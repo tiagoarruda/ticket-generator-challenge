@@ -2,96 +2,49 @@ package lindar.media.ticketgeneratorchallenge.ticket;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Arrays;
+import java.util.stream.IntStream;
 
-class TicketBuilderTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+class TicketStripBuilderTest {
 
     @Test
-    void build_missingAllNumbers() {
+    void build_noTickets() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new Ticket.TicketBuilder()
+            new TicketStrip.TicketStripBuilder()
                     .build();
         });
     }
 
     @Test
-    void build_missingRows() {
-        int[][] rows = new int[][]{{1, 11, 21, 31, 41}};
+    void build_missingTickets() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new Ticket.TicketBuilder()
-                    .rows(rows)
+            new TicketStrip.TicketStripBuilder()
+                    .tickets(new Ticket[]{createTicket()})
                     .build();
         });
     }
 
     @Test
-    void build_missingNumbersInARow() {
-        int[][] rows = new int[][]{{1, 11, 21, 31, 41}, {2, 12, 22, 32, 42}, {3, 13, 23, 33}};
+    void build_repeatedNumbersNotAllowed() {
+        Ticket ticket = createTicket();
         assertThrows(IllegalArgumentException.class, () -> {
-            new Ticket.TicketBuilder()
-                    .rows(rows)
+            new TicketStrip.TicketStripBuilder()
+                    .tickets(new Ticket[]{ticket, ticket, ticket, ticket, ticket, ticket})
                     .build();
         });
     }
 
-    @Test
-    void build_invalidNumbersInARow() {
-        int[][] rows_1 = new int[][]{{1, 11, 21, 31, 41}, {2, 12, 22, 32, 42}, {3, 13, 23, 33, 100}};
-        int[][] rows_2 = new int[][]{{-1, 11, 21, 31, 41}, {2, 12, 22, 32, 42}, {3, 13, 23, 33, 43}};
-        assertThrows(IllegalArgumentException.class, () -> {
-            new Ticket.TicketBuilder()
-                    .rows(rows_1)
-                    .build();
+    private Ticket createTicket() {
+        int[][] rows = new int[3][5];
+        IntStream.range(1, 6).forEach(pos -> {
+            rows[0][pos - 1] = pos * 10;
+            rows[1][pos - 1] = pos * 10 + 1;
+            rows[2][pos - 1] =  pos * 10 + 2;
         });
 
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            new Ticket.TicketBuilder()
-                    .rows(rows_2)
-                    .build();
-        });
-    }
-
-    @Test
-    void build_repeatedNumbers() {
-        int[][] rows = new int[][]{{1, 1, 1, 1, 1}, {2, 12, 22, 32, 42}, {3, 13, 23, 33, 43}};
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            new Ticket.TicketBuilder()
-                    .rows(rows)
-                    .build();
-        });
-    }
-
-    @Test
-    void build_invalidNumberOfNumbersInAColumn() {
-        int[][] rows = new int[][]{{1, 11, 21, 31, 41}, {2, 12, 22, 32, 42}, {3, 4, 23, 33, 43}};
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            new Ticket.TicketBuilder()
-                    .rows(rows)
-                    .build();
-        });
-    }
-
-    @Test
-    void build_invalidNumberOfNumbersInAColumnWithHighBoundary() {
-        int[][] rows = new int[][]{{1, 87, 88, 89, 90}, {2, 12, 22, 32, 42}, {3, 13, 23, 33, 43}};
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            new Ticket.TicketBuilder()
-                    .rows(rows)
-                    .build();
-        });
-    }
-
-    @Test
-    void build_validNumberOfNumbersInAColumnWithTenMultipleBoundary() {
-        int[][] rows = new int[][]{{1, 19, 20, 79, 90}, {2, 12, 22, 32, 42}, {3, 13, 23, 33, 43}};
-
-        Ticket ticket = new Ticket.TicketBuilder()
-                .rows(rows)
-                .build();
-        assertEquals(rows, ticket.getRows());
+        return new Ticket.TicketBuilder().rows(rows).build();
     }
 }
